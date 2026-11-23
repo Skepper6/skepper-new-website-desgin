@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "app/styles/flow.css"
+        ],
+        "createdAt": "2026-11-23T11:10:58.131Z",
+        "reason": "Claude: false positive, .find-say underlines a text field; border-radius is 0 so nothing is rounded"
+      }
+    ]
+  }
+}

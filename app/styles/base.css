@@ -1,0 +1,188 @@
+/* Shared by both designs. Type sizes are the ones theskepper.com uses today:
+   desktop 70 / 50 / 40 / 28 / 20 / 16, phone 35 / 25 / 22 / 18 / 16 / 15. */
+:root {
+  --f70: clamp(2.1875rem, 1.375rem + 3.333vw, 4.375rem);
+  --f50: clamp(1.5625rem, 0.982rem + 2.381vw, 3.125rem);
+  --f40: clamp(1.375rem, 0.957rem + 1.714vw, 2.5rem);
+  --f28: clamp(1.125rem, 0.893rem + 0.952vw, 1.75rem);
+  --f20: clamp(1rem, 0.907rem + 0.381vw, 1.25rem);
+  --f16: clamp(0.9375rem, 0.914rem + 0.095vw, 1rem);
+  --ink: #131218;
+  --edge: clamp(20px, 4vw, 64px);
+  --out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  overflow-x: clip;
+  background: #fff;
+  -webkit-text-size-adjust: 100%;
+}
+html.is-locked {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+body {
+  overflow-x: clip;
+  color: var(--ink);
+  font-family: "Poppins", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+svg,
+canvas,
+video {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: inherit;
+  cursor: pointer;
+}
+a {
+  color: inherit;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+::selection {
+  background: #ffc000;
+  color: var(--ink);
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip {
+  position: fixed;
+  left: 20px;
+  top: -90px;
+  z-index: 99;
+  padding: 14px 24px;
+  background: var(--ink);
+  color: #fff;
+}
+.skip:focus {
+  top: 16px;
+}
+.mark .shard path {
+  fill: #d9d8de;
+  transition: fill 0.9s ease;
+}
+.mark .shard.is-lit path {
+  fill: var(--c);
+}
+.site {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  font: 400 var(--f16) / 1.75 var(--text), "Poppins", sans-serif;
+  color: var(--ink);
+}
+.site > main {
+  flex: 1;
+}
+.site :is(h1, h2) {
+  font-family: var(--display);
+  text-wrap: balance;
+}
+.site h1 {
+  font-size: var(--f70);
+  line-height: 1.04;
+}
+.site h2 {
+  font-size: var(--f50);
+  line-height: 1.12;
+}
+.site h3 {
+  font-size: var(--f28);
+  font-weight: 500;
+  line-height: 1.36;
+}
+.t-lead {
+  font-size: var(--f20);
+  line-height: 1.5;
+}
+.site b {
+  font-weight: 500;
+}
+.site :focus-visible {
+  outline: 3px solid #0077b8;
+  outline-offset: 5px;
+}
+
+/* the two-design chooser and the 404 */
+.choose {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 24px;
+  padding: 40px;
+  text-align: center;
+  font: 400 var(--f20) / 1.5 system-ui, sans-serif;
+}
+.choose .mark {
+  width: 130px;
+}
+.choose h1 {
+  font-size: var(--f50);
+  font-weight: 500;
+  line-height: 1.1;
+}
+.choose a {
+  display: block;
+  font-size: var(--f40);
+  font-weight: 500;
+  text-decoration: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,372 @@
+/* Design 2. The dial: film inside words, and a round control for everything. */
+.site.dial {
+  --track: -0.05em;
+  --accent: #0077b8;
+  --c: #0082c8;
+}
+.site.dial :is(h1, h2) {
+  font-weight: 500;
+  letter-spacing: -0.055em;
+}
+.site.dial :is(.askbox-a, .end-say, .find-say, .say-list, .pane b, .told li b, .sheet-nav) {
+  font-weight: 400;
+}
+.site.dial :is(.paynow, .tray-total, .talk-price b, .talk-qty input) {
+  font-weight: 500;
+  letter-spacing: -0.06em;
+}
+.site.dial .t-lead {
+  text-wrap: pretty;
+}
+
+/* ---- film inside the words ---- */
+.fw {
+  height: 250svh;
+}
+.fw-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #fff;
+}
+.fw-stage video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fw-sheet {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 9vh;
+  background: #fff;
+  mix-blend-mode: screen;
+}
+.site.dial .fw-words {
+  max-width: 98vw;
+  font-size: clamp(3.1rem, 12.6vw, 14.375rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  text-align: center;
+  color: #000;
+  transform-origin: 46% 27%;
+  will-change: transform;
+}
+.fw-under {
+  position: absolute;
+  inset: auto var(--edge) 6vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 24px 60px;
+}
+.fw-under .t-lead {
+  max-width: 27em;
+}
+
+/* ---- the dial ---- */
+.turner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 54% minmax(0, 1fr);
+  align-items: center;
+  min-height: 100svh;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--c) 14%, #fff);
+  transition: background 1s ease;
+}
+.ring-wrap {
+  position: relative;
+  width: min(112svh, 63vw);
+  aspect-ratio: 1;
+  margin-left: max(-17vw, -26svh);
+}
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #fff;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+.ring:active {
+  cursor: grabbing;
+}
+.spoke {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 49%;
+  height: 56px;
+  margin-top: -28px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 22px 0 0;
+  transform-origin: 0 50%;
+  transform: rotate(calc(var(--i) + var(--a)));
+  text-align: right;
+  font: 500 var(--f28) / 1.05 var(--display);
+  letter-spacing: -0.05em;
+  color: #6d6b78;
+  pointer-events: none;
+  transition: color 0.4s ease;
+}
+.spoke span {
+  display: inline-block;
+  padding: 14px 0;
+  pointer-events: auto;
+}
+.spoke[aria-pressed="true"] {
+  color: var(--ink);
+}
+.turner-in .spoke {
+  font-size: var(--f16);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+.turner-in .spoke span {
+  max-width: 44%;
+}
+.eye {
+  position: absolute;
+  inset: 24%;
+  overflow: hidden;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: eye 1.2s var(--out);
+}
+.eye img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: zoom 1.6s var(--out);
+}
+@keyframes eye {
+  from {
+    clip-path: circle(0%);
+  }
+  to {
+    clip-path: circle(50%);
+  }
+}
+@keyframes zoom {
+  from {
+    scale: 1.35;
+  }
+}
+.dial-side {
+  display: grid;
+  justify-items: start;
+  gap: 20px;
+  padding: 120px var(--edge) 80px 2vw;
+  animation: ask 1s var(--out);
+}
+.dial-piece {
+  height: 84px;
+  max-width: 120px;
+}
+.dial-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+}
+.dial-words button {
+  font-size: var(--f20);
+  line-height: 1.9;
+  transition: opacity 0.3s ease;
+}
+.dial-words:hover button:not(:hover) {
+  opacity: 0.35;
+}
+.dial-words sup {
+  margin-left: 6px;
+  font-size: 0.75em;
+  font-weight: 500;
+}
+.dial-price {
+  font: 500 var(--f40) / 1.1 var(--display);
+  letter-spacing: -0.06em;
+}
+
+/* ---- popular: four discs that overlap ---- */
+.orbits {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  padding: 60px var(--edge) 120px;
+  row-gap: 0;
+}
+.orbits h2 {
+  grid-column: 1 / -1;
+  margin-bottom: 40px;
+}
+.orbits > p {
+  grid-column: 1 / 6;
+  align-self: end;
+}
+.orbit {
+  position: relative;
+  aspect-ratio: 1;
+}
+.orbit img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: scale 1.2s var(--out);
+}
+.orbit:hover img {
+  scale: 1.04;
+}
+.orbit span {
+  position: absolute;
+  left: 50%;
+  bottom: 7%;
+  translate: -50% 0;
+  display: grid;
+  width: max-content;
+  max-width: 92%;
+  padding: 14px 32px;
+  border-radius: 99px;
+  background: #fff;
+  text-align: center;
+  line-height: 1.4;
+}
+.orbit b {
+  font-size: var(--f20);
+}
+.orbit-0 {
+  grid-column: 1 / 6;
+}
+.orbit-1 {
+  grid-column: 6 / 10;
+  margin-top: 26%;
+}
+.orbit-2 {
+  grid-column: 9 / 13;
+  margin-top: -14%;
+}
+.orbit-3 {
+  grid-column: 4 / 9;
+  margin-top: -8%;
+}
+@keyframes slow {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* ---- a service on its disc ---- */
+.disc-page {
+  background: color-mix(in srgb, var(--c) 14%, #fff);
+}
+.disc-top {
+  display: grid;
+  grid-template-columns: 52% minmax(0, 1fr);
+  align-items: center;
+  gap: 4%;
+  min-height: 100svh;
+  overflow: hidden;
+}
+.disc-top figure {
+  width: min(112svh, 62vw);
+  aspect-ratio: 1;
+  margin-left: max(-14vw, -22svh);
+  padding: 9%;
+  border-radius: 50%;
+  background: #fff;
+}
+.disc-top figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  animation: eye 1.4s var(--out);
+}
+.disc-top > div {
+  display: grid;
+  justify-items: start;
+  gap: 18px;
+  padding: 120px var(--edge) 80px 0;
+}
+.site.dial .lens-pic {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.site.dial .lens-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 899px) {
+  .site.dial .fw-words {
+    width: min-content;
+    font-size: clamp(3.4rem, 21.5vw, 10rem);
+    text-align: left;
+  }
+  .fw-sheet {
+    padding-bottom: 27vh;
+  }
+  .fw {
+    height: 200svh;
+  }
+  .fw-under {
+    flex-direction: column;
+    align-items: start;
+  }
+  .turner {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 90px;
+  }
+  .ring-wrap {
+    width: 128vw;
+    margin-left: -62vw;
+  }
+  .turner-in .spoke {
+    font-size: 0.9375rem;
+  }
+  .dial-side {
+    padding: 20px var(--edge) 90px;
+  }
+  .orbits {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .orbit,
+  .orbits > p {
+    grid-column: 1;
+    margin: 0;
+  }
+.disc-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .disc-top figure {
+    width: 112vw;
+    margin: 60px 0 0 -44vw;
+  }
+  .disc-top > div {
+    padding: 20px var(--edge) 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fw {
+    height: 100svh;
+  }
+}
+
+
+.room-head {
+  padding-top: var(--gap);
+}

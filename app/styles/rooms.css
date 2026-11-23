@@ -1,0 +1,423 @@
+/* Design 1. Rooms of light: white walls flooded with the colour of one giant piece of glass. */
+.rooms {
+  --track: -0.035em;
+  --accent: #6f1a75;
+  --display: var(--text);
+}
+.rooms :is(h1, h2) {
+  font-weight: 300;
+  letter-spacing: -0.04em;
+}
+
+
+/* ---- the walk ---- */
+.walk {
+  position: relative;
+}
+.walk-canvas,
+.walk .compass {
+  display: none;
+}
+.hall {
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+  align-content: center;
+  min-height: 100svh;
+  padding: 120px var(--edge) 60px;
+}
+.hall-mark {
+  position: absolute;
+  right: var(--edge);
+  top: 12vh;
+  height: 76vh;
+  z-index: -1;
+}
+.hall .t-lead {
+  max-width: 25em;
+}
+.room {
+  display: grid;
+  justify-items: start;
+  gap: 18px;
+  padding: 90px var(--edge);
+  background: var(--tint);
+}
+.room-flat {
+  height: 160px;
+}
+.room .t-lead {
+  max-width: 24em;
+}
+.room .lens {
+  width: 240px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.room .lens img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hall-still {
+  display: none;
+}
+.fx .walk:not(.is-flat) .hall-still {
+  display: block;
+  position: absolute;
+  left: 66%;
+  top: 50%;
+  width: min(107.5svh, 62.5vw);
+  max-width: none;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  transition: opacity 0.6s ease 0.25s;
+}
+.hall-still img {
+  width: 100%;
+  height: 100%;
+}
+.fx .walk.is-live .hall-still {
+  opacity: 0;
+}
+.fx .walk:not(.is-flat) .walk-run {
+  height: 1000svh;
+}
+.fx .walk:not(.is-flat) .walk-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+.fx .walk:not(.is-flat) .walk-canvas {
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.fx .walk.is-live:not(.is-flat) .walk-canvas {
+  opacity: 1;
+}
+.fx .walk:not(.is-flat) :is(.hall-mark, .room-flat) {
+  display: none;
+}
+.fx .walk:not(.is-flat) :is(.hall, .room) {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  background: none;
+  pointer-events: none;
+}
+.fx .walk:not(.is-flat) .hall {
+  align-content: end;
+  padding: 120px var(--edge) 9vh;
+}
+.fx .walk:not(.is-flat) .hall > * {
+  transition: translate 1.3s var(--out), opacity 0.6s ease;
+}
+.fx .walk:not(.is-flat) .hall[data-on="true"] > * {
+  pointer-events: auto;
+}
+.fx .walk:not(.is-flat) .hall[data-on="false"] > * {
+  translate: -14vw 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: translate 1.3s var(--out), opacity 0.6s ease, visibility 0s 0.6s;
+}
+.fx .walk:not(.is-flat) .room {
+  align-content: center;
+  padding: 120px var(--edge) 90px;
+}
+.fx .walk:not(.is-flat) .room > * {
+  opacity: 0;
+  translate: 8vw 0;
+  transition: opacity 0.4s ease, translate 0.5s ease, clip-path 0.6s ease;
+}
+.fx .walk:not(.is-flat) .room h2 {
+  font-size: var(--f70);
+  line-height: 1.02;
+  max-width: 8.4em;
+}
+.fx .walk:not(.is-flat) .room[data-on="true"] {
+  pointer-events: auto;
+}
+.fx .walk:not(.is-flat) .room[data-on="true"] > * {
+  opacity: 1;
+  translate: 0;
+  transition: opacity 0.9s ease 0.15s, translate 1.4s var(--out) 0.1s, clip-path 1.5s var(--out) 0.25s;
+}
+.fx .walk:not(.is-flat) .room[data-on="true"] > :nth-child(3) {
+  transition-delay: 0.2s;
+}
+.fx .walk:not(.is-flat) .room[data-on="true"] > :nth-child(4) {
+  transition-delay: 0.28s;
+}
+.fx .walk:not(.is-flat) .room .lens {
+  position: absolute;
+  right: var(--edge);
+  bottom: 9vh;
+  width: clamp(150px, 21vw, 340px);
+  clip-path: circle(0%);
+  translate: 0;
+}
+.fx .walk:not(.is-flat) .room[data-on="true"] .lens {
+  clip-path: circle(50%);
+}
+.fx .walk:not(.is-flat) .compass {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  bottom: 24px;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+}
+.compass > button:first-child {
+  width: 46px;
+}
+
+/* ---- inside one room ---- */
+.in-room {
+  background: var(--tint);
+}
+.in-top {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 20px;
+  min-height: 100svh;
+  padding: 140px var(--edge) 80px;
+}
+.in-top > * {
+  max-width: 11.5em;
+}
+.in-top .t-lead,
+.in-top p {
+  max-width: 24em;
+}
+.in-top .cta {
+  max-width: none;
+}
+.in-top h1 {
+  max-width: 8.6em;
+}
+.in-price {
+  font: 400 var(--f40) / 1.2 var(--display);
+}
+.glass-piece {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  max-width: none !important;
+  overflow: hidden;
+}
+.glass-piece canvas {
+  width: 100%;
+  height: 100%;
+}
+.glass-piece svg {
+  position: absolute;
+  right: 10%;
+  top: 14%;
+  height: 72%;
+  width: auto;
+  opacity: 0.85;
+}
+.fx .glass-piece[data-flat="false"] svg {
+  display: none;
+}
+.fx .glass-piece canvas {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.fx .glass-piece[data-live="true"] canvas {
+  opacity: 1;
+}
+.rooms .steps-page,
+.rooms .desk {
+  --tint: rgb(239 226 244);
+}
+
+@media (max-width: 899px) {
+  .fx .walk:not(.is-flat) .compass {
+    left: auto;
+    right: var(--edge);
+    bottom: 20px;
+    translate: none;
+  }
+  .fx .walk:not(.is-flat) .hall {
+    padding-bottom: 96px;
+    gap: 14px;
+  }
+  .fx .walk:not(.is-flat) .room {
+    align-content: end;
+    padding-bottom: 104px;
+    gap: 12px;
+  }
+  .fx .walk:not(.is-flat) .room .lens {
+    top: 100px;
+    bottom: auto;
+    width: 112px;
+  }
+  .hall-mark {
+    position: static;
+    height: auto;
+    width: 64%;
+  }
+  .in-top {
+    align-content: end;
+    padding-bottom: 60px;
+  }
+}
+
+@media (max-width: 800px) {
+  .fx .walk:not(.is-flat) .hall-still {
+    left: 50%;
+    top: 34%;
+    width: min(57.2svh, 100vw);
+  }
+}
+
+/* ---- inside a room ---- */
+.room-ghost {
+  position: absolute !important;
+  z-index: -1;
+  right: -0.04em;
+  bottom: -0.2em;
+  max-width: none !important;
+  font-size: clamp(6rem, 25vw, 23rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.07em;
+  color: rgb(255 255 255 / 0.42);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.room {
+  isolation: isolate;
+  overflow: hidden;
+}
+.room h2 {
+  font-weight: 700 !important;
+}
+.room-picks {
+  display: grid;
+  gap: 8px;
+  width: min(400px, 100%);
+}
+.room-picks button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 99px;
+  background: rgb(255 255 255 / 0.66);
+  font-weight: 500;
+  text-align: left;
+  transition: background 0.3s ease, translate 0.5s var(--out);
+}
+.room-picks button:hover {
+  background: #fff;
+  translate: 8px 0;
+}
+.room-picks .num {
+  white-space: nowrap;
+}
+.in-top {
+  overflow: hidden;
+  min-height: min(100svh, 860px);
+}
+.in-top h1 {
+  font-weight: 700;
+}
+.in-count {
+  font-weight: 500;
+}
+.in-price {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.in-top .pill {
+  background: rgb(255 255 255 / 0.66);
+}
+.in-top .pill:hover {
+  background: var(--ink);
+}
+.in-top > p:has(.pill) {
+  max-width: none;
+}
+.hall .pill {
+  min-height: 60px;
+}
+@media (max-width: 899px) {
+  .fx .walk:not(.is-flat) .room-picks li:nth-child(n + 3) {
+    display: none;
+  }
+  .fx .walk:not(.is-flat) .room .t-lead {
+    font-size: var(--f16);
+  }
+}
+.rooms :is(.paynow, .tray-total, .talk-price b, .talk-qty input, .in-price) {
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+.room .lens,
+.fx .walk:not(.is-flat) .room .lens {
+  border-radius: var(--r);
+  aspect-ratio: 0.86;
+}
+.fx .walk:not(.is-flat) .room .lens {
+  clip-path: inset(100% 0 0 round var(--r));
+}
+.fx .walk:not(.is-flat) .room[data-on="true"] .lens {
+  clip-path: inset(0 round var(--r));
+}
+.hall-reel {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  line-height: 1.4;
+}
+.hall-reel video {
+  width: 150px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 22px;
+}
+.hall-reel p {
+  max-width: 11em;
+}
+.site .hall-reel b {
+  font-size: var(--f28);
+  font-weight: 700;
+}
+.fx .walk:not(.is-flat) .hall-reel {
+  position: absolute;
+  right: var(--edge);
+  bottom: 9vh;
+}
+@media (max-width: 899px) {
+  .fx .walk:not(.is-flat) .hall-reel {
+    display: none;
+  }
+}
+@media (min-width: 900px) {
+  .fx .walk:not(.is-flat) .hall-reel {
+    bottom: 4.5vh;
+  }
+}
+@media (max-width: 899px) {
+  .room .room-ghost {
+    display: none;
+  }
+}
