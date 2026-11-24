@@ -1,4 +1,9 @@
+// True only in a preview build (Vercel, or PREVIEW=1), where no PHP server exists.
+export const PREVIEW = __PREVIEW__;
+const stand = PREVIEW ? await import("../preview/backend.js") : null;
+
 async function call(method, path, body) {
+  if (PREVIEW) return structuredClone(stand.default(method, path, body));
   const form = body instanceof FormData;
   let res;
   try {
@@ -21,7 +26,13 @@ async function call(method, path, body) {
 }
 export const get = (path) => call("GET", path);
 export const post = (path, body = {}) => call("POST", path, body);
-export const fileUrl = (id) => "./api/files/" + id;
+export const fileUrl = (id) => (PREVIEW ? stand.blobUrl(id) : "./api/files/" + id);
+export function download(f) {
+  const a = document.createElement("a");
+  a.href = fileUrl(f.id);
+  a.download = f.name;
+  a.click();
+}
 
 let script;
 /** Opens Razorpay. Resolves with its answer, or null when the visitor closes it. */

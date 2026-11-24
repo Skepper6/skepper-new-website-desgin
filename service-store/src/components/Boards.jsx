@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { get, post } from "../lib/api";
+import { get, post, PREVIEW } from "../lib/api";
 import { fmt } from "../lib/pricing";
 import { useStore } from "../lib/store";
 import { Cross, Field, Layer } from "./Bits";
@@ -82,7 +82,7 @@ export function Portal() {
             <Project key={p.id} p={p} role="client" onChange={put} />
           </div>
         ) : <div className="empty">No projects yet. <a href="#shop">Browse services</a> to start one.</div>}
-        {client ? null : <SignIn done={load} />}
+        {client || PREVIEW ? null : <SignIn done={load} />}
       </div></div>
     </>
   );
@@ -141,7 +141,7 @@ function Board() {
   const leave = tell(async () => setSession(await post("/auth/leave")));
   return (
     <>
-      <PageHead title="Studio Board" side={<div className="who">{ps.some((p) => p.example) ? <button type="button" className="btn plain" onClick={clear}>Remove example projects</button> : null}<button type="button" className="btn plain" onClick={leave}>Sign out</button></div>}>Internal view for the Skepper team: assign resources, move work through stages and share drafts.</PageHead>
+      <PageHead title="Studio Board" side={<div className="who">{ps.some((p) => p.example) ? <button type="button" className="btn plain" onClick={clear}>Remove example projects</button> : null}{PREVIEW ? null : <button type="button" className="btn plain" onClick={leave}>Sign out</button>}</div>}>Internal view for the Skepper team: assign resources, move work through stages and share drafts.</PageHead>
       <div className="paper page"><div className="wrap wide">
         {note ? <div className="err" role="alert">{note}</div> : null}
         {!list ? <Wait err={err} retry={load} /> : (
@@ -182,5 +182,5 @@ function Board() {
 
 export function Studio() {
   const { session } = useStore();
-  return session?.user?.role === "studio" ? <Board /> : <StaffDoor />;
+  return PREVIEW || session?.user?.role === "studio" ? <Board /> : <StaffDoor />;
 }

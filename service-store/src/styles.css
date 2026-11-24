@@ -282,46 +282,60 @@ dialog.sitemenu::backdrop {
     transform: translateY(24px);
   }
 }
-.sitemenu .bar {
-  border-bottom: 1px solid #4e4e4e;
-}
+/* Sizes below are measured on theskepper.com, at 1920, 1478, 800 and 390 wide. */
 .sitemenu-in {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: calc(100dvh - var(--head) - 1px);
+  grid-template-columns: calc(50% + 7.5px) minmax(0, 1fr);
+  max-width: 1750px;
+  min-height: calc(100dvh - 84px);
+  margin: 0 auto;
+}
+.sitemenu .bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 84px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #373737;
+  background: var(--black);
+}
+.sitemenu .links a {
+  font-weight: 400;
 }
 .sitemenu-in > ul {
-  padding: clamp(14px, 5dvh, 60px) 90px clamp(14px, 4dvh, 60px) 15px;
-  border-right: 1px solid #303030;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  padding: 70px 90px 60px 15px;
+  border-right: 1px solid #373737;
 }
 .sitemenu-in > ul > li > :is(a, button) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   width: 100%;
-  padding: clamp(5px, 1.5dvh, 16px) 0;
-  font-size: var(--f28);
+  padding: 0;
+  font-size: 28px;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 38px;
   text-align: left;
   text-decoration: none;
-  transition: color 0.3s ease;
 }
-.sitemenu-in > ul > li > :is(a, button):hover,
-.sitemenu-in li li a:hover {
-  color: var(--grey);
+.sitemenu-in > ul > li.only-phone {
+  display: none;
 }
 .sitemenu-in button b {
   position: relative;
   flex: none;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 }
 .sitemenu-in button b::before,
 .sitemenu-in button b::after {
   content: "";
   position: absolute;
-  inset: 6.5px 0;
+  inset: 8.5px 2.5px;
   background: #fff;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.1, 1);
 }
@@ -350,38 +364,73 @@ dialog.sitemenu::backdrop {
 .fold > ul {
   min-height: 0;
   overflow: hidden;
-  columns: 2;
-  column-gap: 24px;
 }
 .fold li {
-  break-inside: avoid;
+  padding: 0 0 15px 20px;
+}
+.fold li:first-child {
+  padding-top: 20px;
+}
+.fold li:last-child {
+  padding-bottom: 5px;
 }
 .fold a {
-  display: block;
-  padding: 6px 0 6px 20px;
-  line-height: 1.5;
+  display: inline-block;
+  font-size: 16px;
+  line-height: 28px;
   text-decoration: none;
+  transition: color 0.3s ease;
+}
+.fold a:hover {
+  color: var(--blue);
 }
 .touch {
-  display: grid;
-  align-content: start;
-  gap: 30px;
-  padding: clamp(22px, 6dvh, 72px) 90px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 70px 15px 60px 90px;
 }
 .touch h2 {
-  font-size: var(--f28);
+  margin-bottom: -5px;
+  font-size: 28px;
+  line-height: 38px;
 }
-.touch p {
+.reach {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+.reach i {
   display: grid;
-  max-width: 26em;
-  font-size: 1.125rem;
+  place-items: center;
+  flex: none;
+  width: 60px;
+  height: 60px;
+  border: 2px solid #484848;
+  border-radius: 50%;
+}
+.reach p {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  max-width: 411px;
+}
+.reach span {
+  font-size: 16px;
+  line-height: 28px;
+}
+.reach :is(a, b) {
+  font-size: 18px;
   font-weight: 500;
-}
-.touch span {
-  font-size: var(--f16);
-}
-.touch a {
+  line-height: 28px;
   text-decoration: none;
+}
+.reach a {
+  justify-self: start;
+}
+.reach b {
+  font-size: 17px;
+  line-height: 26.35px;
 }
 
 /* ---------- hero ---------- */
@@ -2053,8 +2102,7 @@ footer {
   .co,
   .portal,
   .pdgrid,
-  .foot-grid,
-  .sitemenu-in {
+  .foot-grid {
     grid-template-columns: minmax(0, 1fr);
   }
   .hero .wrap:first-child {
@@ -2114,14 +2162,6 @@ footer {
   .top-glow + .paper {
     margin-top: -50px;
   }
-  .sitemenu-in > ul {
-    padding: 30px 24px;
-    border-right: 0;
-    border-bottom: 1px solid #303030;
-  }
-  .touch {
-    padding: 40px 24px;
-  }
   .tabs a {
     padding: 0 11px;
   }
@@ -2159,9 +2199,6 @@ footer {
   .cartbtn,
   .menubtn {
     padding: 5px;
-  }
-  .sitemenu .bar {
-    height: 82px;
   }
   .hero .wrap:first-child {
     padding-top: 54px;
@@ -2350,19 +2387,6 @@ footer {
     padding: 0 12px;
   }
 }
-/* short laptop screens: the whole menu fits without scrolling */
-@media (min-width: 981px) and (max-height: 760px) {
-  .sitemenu-in > ul {
-    padding-block: 10px;
-  }
-  .sitemenu-in > ul > li > :is(a, button) {
-    padding: 1.3dvh 0;
-    font-size: min(var(--f28), 3.5dvh);
-  }
-  .fold a {
-    padding-block: 2px;
-  }
-}
 .field input[type="file"]::file-selector-button {
   margin-right: 12px;
   padding: 5px 16px;
@@ -2373,4 +2397,76 @@ footer {
   font: inherit;
   font-size: 0.875rem;
   cursor: pointer;
+}
+@media (max-width: 1180px) {
+  .sitemenu .links {
+    display: flex;
+  }
+}
+@media (max-width: 991px) {
+  .sitemenu-in {
+    grid-template-columns: calc(50% + 15.5px) minmax(0, 1fr);
+  }
+  .sitemenu-in > ul {
+    gap: 40px;
+    padding: 40px 75px 60px 15px;
+  }
+  .sitemenu-in > ul > li > :is(a, button),
+  .touch h2 {
+    font-size: 20px;
+    line-height: 27px;
+  }
+  .touch {
+    padding: 30px 15px 60px;
+  }
+  .reach {
+    gap: 40px;
+  }
+  .reach a {
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+@media (max-width: 767px) {
+  .sitemenu-in {
+    display: block;
+    padding-bottom: 60px;
+  }
+  .sitemenu-in > ul {
+    gap: 30px;
+    padding: 40px 75px 0 15px;
+    border-right: 0;
+  }
+  .sitemenu-in > ul > li > :is(a, button),
+  .touch h2 {
+    font-size: 16px;
+    line-height: 21.7px;
+  }
+  .sitemenu-in > ul > li.only-phone {
+    display: block;
+    margin-top: 3px;
+  }
+  .sitemenu-in > ul > li.only-phone a {
+    font-weight: 400;
+    line-height: 28px;
+  }
+  .fold a,
+  .reach span {
+    font-size: 15px;
+    line-height: 26.25px;
+  }
+  .touch {
+    padding: 60px 15px 0;
+  }
+  .touch h2 {
+    margin-bottom: -10px;
+  }
+  .sitemenu .bar {
+    gap: 8px;
+  }
+  .sitemenu .links a {
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: 500;
+  }
 }

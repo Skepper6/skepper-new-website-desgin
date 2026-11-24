@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { post, razorpay } from "../lib/api";
+import { post, PREVIEW, razorpay } from "../lib/api";
 import { fmt, isOneTime, payPlan } from "../lib/pricing";
 import { useStore } from "../lib/store";
 import { Field } from "./Bits";
@@ -102,7 +102,7 @@ export function Thanks() {
     <section className="success"><div className="wrap">
       <div className="stamp">Paid · {o.orderId}</div>
       <h1>Your order is brewing.</h1>
-      <p>{o.paid ? `${fmt(o.paid)} received.` : "No payment needed."} A GST invoice and portal link go to {o.email}. Next step: share your brief so the studio can start.</p>
+      <p>{PREVIEW ? "This is a preview order: no money was taken, no email is sent and nothing reaches the studio." : `${o.paid ? `${fmt(o.paid)} received.` : "No payment needed."} A GST invoice and portal link go to ${o.email}.`} Next step: share your brief so the studio can start.</p>
       <div className="actions"><button type="button" className="btn goldb" onClick={() => { setCurrent(o.ids[0]); go("portal"); }}>Share your brief</button><a className="btn plain" href="#shop">Keep browsing</a></div>
     </div></section>
   );

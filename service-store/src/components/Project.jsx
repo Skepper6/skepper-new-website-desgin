@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fileUrl, post, razorpay } from "../lib/api";
+import { download, fileUrl, post, razorpay } from "../lib/api";
 import { dstr, fmt } from "../lib/pricing";
 import { useStore } from "../lib/store";
 import { Field } from "./Bits";
@@ -58,7 +58,7 @@ function FileRow({ f, n, rounds }) {
     <div className="file">
       <div className="ic">{f.name.split(".").pop().toUpperCase()}</div>
       <div className="grow"><b>{f.name}</b><small>{f.final ? "Final delivery" : `Draft ${n} · round ${f.round} of ${rounds}`} · {STATUS[f.status] || "Delivered"}</small></div>
-      {f.stored ? <a className="btn plain" href={fileUrl(f.id)} aria-label={"Download " + f.name}>Download</a> : null}
+      {f.stored ? <a className="btn plain" href={fileUrl(f.id)} download={f.name} aria-label={"Download " + f.name}>Download</a> : null}
     </div>
   );
 }
@@ -102,7 +102,7 @@ export default function Project({ p, role, onChange }) {
   const finish = async () => {
     const next = await act("complete");
     const f = next?.files.findLast((x) => x.final && x.stored);
-    if (f) location.href = fileUrl(f.id);
+    if (f) download(f);
   };
   const withFile = (what) => (e) => {
     e.preventDefault();
@@ -153,7 +153,7 @@ export default function Project({ p, role, onChange }) {
                   {p.brief.refs ? <><dt>References</dt><dd>{p.brief.refs}</dd></> : null}
                   <dt>Assets</dt><dd>{p.brief.assets}</dd>
                   {p.brief.date ? <><dt>Deadline</dt><dd>{dstr(p.brief.date)}</dd></> : null}
-                  {p.brief.files.length ? <><dt>Files</dt><dd>{p.brief.files.map((f) => <a key={f.id} href={fileUrl(f.id)}>{f.name}</a>)}</dd></> : null}
+                  {p.brief.files.length ? <><dt>Files</dt><dd>{p.brief.files.map((f) => (f.stored === false ? <span key={f.id}>{f.name} </span> : <a key={f.id} href={fileUrl(f.id)} download={f.name}>{f.name}</a>))}</dd></> : null}
                 </dl></div>
               ) : studio ? <div className="box"><h3>Brief</h3><p className="note">Waiting for the client to submit the brief.</p></div> : null}
             </>

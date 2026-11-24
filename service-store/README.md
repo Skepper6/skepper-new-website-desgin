@@ -16,6 +16,14 @@ MariaDB server, copy `api/config.sample.php` to `api/config.php` with `env` set 
 the database, run `php scripts/install.php setup`, then `php scripts/install.php staff you@theskepper.com` and
 `php scripts/install.php examples`, and start it with `php -S 127.0.0.1:8099 router.php`.
 
+## Preview on Vercel
+
+Vercel cannot run PHP or MySQL. A build there (or `PREVIEW=1 npm run build`) uses `src/preview` instead of the server:
+the whole store can be clicked through, but everything stays in the visitor's browser. No order reaches the studio, no
+money is taken, no email is sent, and the Studio Board opens without a password because it only shows that browser's data.
+Use it to show the design, never to sell. Set the Vercel root directory to `service-store`.
+After changing the menu in the database, refresh its copy: `curl http://127.0.0.1:8099/api/catalogue -o src/preview/catalogue.json`
+
 ## Put it online
 
 theskepper.com is a Webflow site and Webflow cannot run PHP or MySQL. Host the store on cPanel or any PHP server,

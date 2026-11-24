@@ -40,6 +40,10 @@ function SiteMenu({ onClose }) {
       <div className="bar">
         <a className="logo" href={SITE} aria-label="Skepper, main site"><img src="./logo.svg" alt="Skepper" width="151" height="42" /></a>
         <span className="spacer" />
+        <div className="links">
+          <a href="https://www.linkedin.com/company/skeppercreative/" target="_blank" rel="noopener">Linkedin</a>
+          <a href="https://www.instagram.com/the_skepper/" target="_blank" rel="noopener">Instagram</a>
+        </div>
         <button type="button" className="menubtn" onClick={close}><span>Menu</span><i><Cross /></i></button>
       </div>
       <div className="sitemenu-in">
@@ -56,12 +60,13 @@ function SiteMenu({ onClose }) {
               )}
             </li>
           ))}
+          <li className="only-phone" style={{ "--i": MENU.length }}><a href="https://brewyourbrand.in/brandselfauditkit">Get a Quick Brand Assessment</a></li>
         </ul>
         <div className="touch">
           <h2>Get In Touch</h2>
-          <p><span>Call Us</span><a href="tel:+918150002200">+91 8150 00 22 00</a></p>
-          <p><span>Email Us</span><a href="mailto:binu@theskepper.com">binu@theskepper.com</a></p>
-          <p><span>Find Us</span>S003, Devin Indira Paradise, Chokkanahalli, Bengaluru 560063</p>
+          <div className="reach"><i><img src="./icons/call.svg" alt="" width="25" height="25" /></i><p><span>Call Us</span><a href="tel:+918150002200">+91 8150 00 22 00</a></p></div>
+          <div className="reach"><i><img src="./icons/mail.svg" alt="" width="29" height="21" /></i><p><span>Email Us</span><a href="mailto:binu@theskepper.com">binu@theskepper.com</a></p></div>
+          <div className="reach"><i><img src="./icons/pin.svg" alt="" width="40" height="28" /></i><p><span>Find Us</span><b>S003, Devin Indira Paradise, Chokkanahalli, Bengaluru 560063</b></p></div>
         </div>
       </div>
     </Layer>
