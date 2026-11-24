@@ -16,7 +16,7 @@ const withApi = {
 
 export default defineConfig({
   base: "./",
-  define: { __PREVIEW__: JSON.stringify(preview) },
+  define: { __PREVIEW__: JSON.stringify(preview), __EMBED__: "false" },
   build: { target: "es2022" },
   plugins: preview ? [react()] : [react(), withApi],
   server: { proxy: { "/api": "http://127.0.0.1:8099" } },

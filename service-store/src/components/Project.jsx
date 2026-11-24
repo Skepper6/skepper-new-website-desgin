@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { download, fileUrl, post, razorpay } from "../lib/api";
 import { dstr, fmt } from "../lib/pricing";
 import { useStore } from "../lib/store";
@@ -71,6 +71,7 @@ export default function Project({ p, role, onChange }) {
   const [err, setErr] = useState("");
   const [corr, setCorr] = useState("");
   const [msg, setMsg] = useState("");
+  const corrBox = useRef(null);
   const bal = p.total - p.paid;
   const pending = p.files.find((f) => f.status === "pending");
 
@@ -128,8 +129,8 @@ export default function Project({ p, role, onChange }) {
                 {!studio && pending ? (
                   <>
                     <div className="callout">Draft ready for review. You have used {p.round} of {rounds} included correction rounds.</div>
-                    <Field id="corr" label="Corrections (if any)"><textarea id="corr" value={corr} onChange={(e) => setCorr(e.target.value)} placeholder="List changes clearly, one per line" /></Field>
-                    <div className="actions"><button type="button" className="btn" disabled={busy} onClick={() => act("approve")}>Approve draft</button><button type="button" className="btn ghost" disabled={busy} onClick={async () => (corr.trim() ? (await act("changes", { text: corr })) && setCorr("") : (setErr("Please list the corrections before sending"), document.getElementById("corr").focus()))}>Request corrections</button></div>
+                    <Field id="corr" label="Corrections (if any)"><textarea id="corr" ref={corrBox} value={corr} onChange={(e) => setCorr(e.target.value)} placeholder="List changes clearly, one per line" /></Field>
+                    <div className="actions"><button type="button" className="btn" disabled={busy} onClick={() => act("approve")}>Approve draft</button><button type="button" className="btn ghost" disabled={busy} onClick={async () => (corr.trim() ? (await act("changes", { text: corr })) && setCorr("") : (setErr("Please list the corrections before sending"), corrBox.current.focus()))}>Request corrections</button></div>
                     {p.round >= rounds ? <p className="note">All {rounds} included rounds are used. Further corrections will be costed by our accounts team before work continues.</p> : null}
                   </>
                 ) : null}

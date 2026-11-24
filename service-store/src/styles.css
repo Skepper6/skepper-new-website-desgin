@@ -24,6 +24,8 @@
   --f20: clamp(1rem, 0.907rem + 0.381vw, 1.25rem);
   --f16: clamp(0.9375rem, 0.914rem + 0.095vw, 1rem);
   --head: 82px;
+  /* header, menu and footer line up with the page content (1290px, centred) */
+  --side: max(24px, calc((100% - 1290px) / 2));
   color-scheme: light;
 }
 *,
@@ -147,7 +149,7 @@ header {
   align-items: center;
   gap: 18px;
   height: var(--head);
-  padding: 0 15px;
+  padding: 0 var(--side);
 }
 .logo img {
   width: 151px;
@@ -286,7 +288,7 @@ dialog.sitemenu::backdrop {
 .sitemenu-in {
   display: grid;
   grid-template-columns: calc(50% + 7.5px) minmax(0, 1fr);
-  max-width: 1750px;
+  max-width: 1338px;
   min-height: calc(100dvh - 84px);
   margin: 0 auto;
 }
@@ -306,7 +308,7 @@ dialog.sitemenu::backdrop {
   display: flex;
   flex-direction: column;
   gap: 35px;
-  padding: 70px 90px 60px 15px;
+  padding: 70px 90px 60px 24px;
   border-right: 1px solid #373737;
 }
 .sitemenu-in > ul > li > :is(a, button) {
@@ -388,7 +390,7 @@ dialog.sitemenu::backdrop {
   display: flex;
   flex-direction: column;
   gap: 40px;
-  padding: 70px 15px 60px 90px;
+  padding: 70px 24px 60px 90px;
 }
 .touch h2 {
   margin-bottom: -5px;
@@ -2039,15 +2041,15 @@ dialog.drawer {
 
 /* ---------- footer ---------- */
 footer {
-  padding: 74px 46px 28px;
+  padding: 74px var(--side) 28px;
   background: #000;
   color: #fff;
   font-size: 1.0625rem;
 }
 .foot-grid {
   display: grid;
-  grid-template-columns: 5fr 4fr 3fr;
-  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 40px clamp(60px, 11vw, 170px);
   padding-bottom: 74px;
   border-bottom: 1px solid #2b2b2b;
 }
@@ -2089,7 +2091,7 @@ footer {
   font-style: normal;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1260px) {
   .links,
   .logo-name {
     display: none;
@@ -2398,7 +2400,7 @@ footer {
   font-size: 0.875rem;
   cursor: pointer;
 }
-@media (max-width: 1180px) {
+@media (max-width: 1260px) {
   .sitemenu .links {
     display: flex;
   }
@@ -2409,7 +2411,7 @@ footer {
   }
   .sitemenu-in > ul {
     gap: 40px;
-    padding: 40px 75px 60px 15px;
+    padding: 40px 66px 60px 24px;
   }
   .sitemenu-in > ul > li > :is(a, button),
   .touch h2 {
@@ -2428,6 +2430,9 @@ footer {
   }
 }
 @media (max-width: 767px) {
+  .bar {
+    padding-inline: 15px;
+  }
   .sitemenu-in {
     display: block;
     padding-bottom: 60px;
@@ -2468,5 +2473,55 @@ footer {
     padding: 0 10px;
     font-size: 11px;
     font-weight: 500;
+  }
+}
+
+/* inside another website: the store's own bar under its header */
+.storebar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 66px;
+  padding: 0 var(--side);
+  border-top: 1px solid #373737;
+  background: var(--bar);
+  color: #fff;
+}
+.storebar .logo-name {
+  padding: 0;
+  border: 0;
+}
+.storebar .cartbtn {
+  height: 50px;
+}
+@media (max-width: 760px) {
+  .storebar {
+    gap: 6px;
+    height: 60px;
+    padding: 0 15px;
+  }
+  .storebar .tabs {
+    flex: 1;
+    justify-content: space-between;
+    gap: 0;
+    margin: 0;
+  }
+  .storebar .spacer {
+    display: none;
+  }
+  .storebar .tabs a {
+    min-height: 44px;
+    padding: 0 9px;
+    font-size: 0.875rem;
+  }
+  .storebar .cartbtn {
+    height: 48px;
+    padding: 3px;
+  }
+}
+@media (max-width: 350px) {
+  .storebar .tabs a {
+    padding: 0 6px;
+    font-size: 0.78rem;
   }
 }

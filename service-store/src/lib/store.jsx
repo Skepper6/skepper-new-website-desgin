@@ -61,6 +61,8 @@ export function StoreProvider({ children }) {
 
   useEffect(() => {
     const on = () => {
+      const h = location.hash.slice(1);
+      if (h && !VIEWS.includes(h)) return; // a link of the page around us
       setView(readView());
       setLayer(null);
       scrollTo(0, 0);

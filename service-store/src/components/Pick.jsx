@@ -12,7 +12,7 @@ export default function Pick({ label, value, options, onPick }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    const out = (e) => { if (!box.current.contains(e.target)) setOpen(false); };
+    const out = (e) => { if (!e.composedPath().includes(box.current)) setOpen(false); };
     document.addEventListener("pointerdown", out);
     return () => document.removeEventListener("pointerdown", out);
   }, [open]);
@@ -34,7 +34,7 @@ export default function Pick({ label, value, options, onPick }) {
     setAt(now);
     setOpen(true);
     const b = box.current.getBoundingClientRect();
-    const head = document.querySelector("header").offsetHeight;
+    const head = parseFloat(getComputedStyle(box.current.closest(".filters")).top) || 0;
     const need = b.bottom + 24 + Math.min(list.current.scrollHeight + 20, 540) - innerHeight;
     const move = Math.min(need, b.top - head - 18);
     if (move > 1) scrollBy({ top: move, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });

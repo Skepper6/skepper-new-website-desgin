@@ -7,7 +7,7 @@ export default [
   js.configs.recommended,
   {
     files: ["src/**/*.{js,jsx}"],
-    languageOptions: { globals: { ...globals.browser, __PREVIEW__: "readonly" }, parserOptions: { ecmaFeatures: { jsx: true } } },
+    languageOptions: { globals: { ...globals.browser, __PREVIEW__: "readonly", __EMBED__: "readonly" }, parserOptions: { ecmaFeatures: { jsx: true } } },
     plugins: { react, "react-hooks": hooks },
     rules: { ...hooks.configs.recommended.rules, "react/jsx-uses-vars": "error", "react/jsx-uses-react": "off" },
   },

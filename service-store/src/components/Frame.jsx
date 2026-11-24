@@ -73,9 +73,8 @@ function SiteMenu({ onClose }) {
   );
 }
 
-export function Header() {
-  const { cart, layer, setLayer } = useStore();
-  const shut = useCallback(() => setLayer(null), [setLayer]);
+function CartButton() {
+  const { cart, setLayer } = useStore();
   const btn = useRef(null);
   const n = useRef(cart.length);
   useEffect(() => {
@@ -86,6 +85,17 @@ export function Header() {
     }
     n.current = cart.length;
   }, [cart.length]);
+  return <button type="button" ref={btn} className="cartbtn" onClick={() => setLayer({ type: "cart" })} aria-label={`Open cart, ${cart.length} ${cart.length === 1 ? "item" : "items"}`}><span className="lbl">Cart</span><span className="count num">{cart.length}</span></button>;
+}
+
+/** The store's own bar, under the website's header. */
+export const StoreBar = () => (
+  <div className="storebar"><a className="logo-name" href="#shop">Service Store</a><Tabs /><span className="spacer" /><CartButton /></div>
+);
+
+export function Header() {
+  const { layer, setLayer } = useStore();
+  const shut = useCallback(() => setLayer(null), [setLayer]);
   return (
     <>
       <header>
@@ -98,7 +108,7 @@ export function Header() {
             <a href="https://www.linkedin.com/company/skeppercreative/" target="_blank" rel="noopener">Linkedin</a>
             <a href="https://www.instagram.com/the_skepper/" target="_blank" rel="noopener">Instagram</a>
           </div>
-          <button type="button" ref={btn} className="cartbtn" onClick={() => setLayer({ type: "cart" })} aria-label={`Open cart, ${cart.length} ${cart.length === 1 ? "item" : "items"}`}><span className="lbl">Cart</span><span className="count num">{cart.length}</span></button>
+          <CartButton />
           <button type="button" className="menubtn" onClick={() => setLayer({ type: "menu" })} aria-expanded={layer?.type === "menu"}><span>Menu</span><i><svg width="18" height="14" viewBox="0 0 18 14" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M0 1h18M0 7h18M0 13h18" /></svg></i></button>
         </div>
       </header>

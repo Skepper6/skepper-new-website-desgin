@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { fmt, isOneTime, two, unitText } from "../lib/pricing";
 import { useStore } from "../lib/store";
 import { Arrow, Pill } from "./Bits";
@@ -29,18 +29,45 @@ function Item({ s, n, rounds, open }) {
   );
 }
 
-export default function Shop() {
-  const { menu, setLayer } = useStore();
-  const { cats, services, rounds } = menu;
+const useOpen = () => {
+  const { setLayer } = useStore();
+  return (id) => setLayer({ type: "service", id });
+};
+
+export function Specials() {
+  const { menu } = useStore();
+  const open = useOpen();
+  const { rounds } = menu;
+  return (
+    <div className="ticket specials">
+      <h2>Today’s specials</h2>
+      <div className="rule" />
+      {menu.specials.map(menu.svc).filter(Boolean).map((s) => (
+        <button key={s.id} type="button" className="tl" onClick={() => open(s.id)}><span className="n">{s.name.replace("Monthly Plan · ", "Social · ")}</span><span className="d" /><span className="num">{fmt(s.price)}{s.unit === "month" ? "/mo" : ""}</span></button>
+      ))}
+      <div className="rule" />
+      <div className="foot">Every project includes up to {rounds} correction rounds.<br />Start with 50% advance. GST invoice issued.</div>
+    </div>
+  );
+}
+
+export function Marquee() {
+  const { services } = useStore().menu;
+  const names = services.filter((s) => s.unit !== "quote");
+  return <div className="marquee" aria-hidden="true"><div className="track-m">{[0, 1].map((k) => names.map((s) => <span key={k + s.id}>{s.name}</span>))}</div></div>;
+}
+
+/** Search, category, billing and the 59 services. */
+export function ServiceMenu({ ref }) {
+  const { cats, services, rounds } = useStore().menu;
+  const open = useOpen();
+  const results = useRef(null);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("all");
   const [type, setType] = useState("all");
-  const open = (id) => setLayer({ type: "service", id });
-  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const toMenu = () => document.getElementById("menu").scrollIntoView({ behavior: calm ? "auto" : "smooth" });
   const pickCat = (id) => {
     setCat(id);
-    const r = document.getElementById("results");
+    const r = results.current;
     if (r.getBoundingClientRect().top < 0) requestAnimationFrame(() => r.scrollIntoView());
   };
   const blocks = useMemo(() => {
@@ -52,7 +79,39 @@ export default function Shop() {
     return cats.map((c, i) => [c, i, services.filter((s) => s.cat === c.id && match(s))]).filter((b) => b[2].length);
   }, [cats, services, q, cat, type]);
   const choices = [{ id: "all", name: "Everything", n: services.length }, ...cats.map((c) => ({ id: c.id, name: c.name, n: services.filter((s) => s.cat === c.id).length }))];
-  const names = services.filter((s) => s.unit !== "quote");
+  return (
+    <>
+      <div className="filters" id="menu" ref={ref}>
+        <div className="wrap">
+          <div className="row1">
+            <input className="search" type="search" placeholder="Search the menu: logo, reel, 30 seconds, brochure…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search services" />
+            <Pick label="Category" value={cat} options={choices} onPick={pickCat} />
+            <div className="seg" role="group" aria-label="Billing type">
+              {[["all", "All"], ["once", "One-time"], ["month", "Monthly"]].map(([id, l]) => <button key={id} type="button" className={type === id ? "on" : ""} aria-pressed={type === id} onClick={() => setType(id)}>{l}</button>)}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="wrap" id="results" ref={results}>
+        {blocks.map(([c, i, list]) => (
+          <section key={c.id} className="catblock" aria-labelledby={"cat-" + c.id}>
+            <div className="cathead"><span className="big" aria-hidden="true">{two(i + 1)}</span><h2 id={"cat-" + c.id}>{c.name}</h2><p>{c.blurb}</p></div>
+            <div className="items">{list.map((s, k) => <Item key={s.id} s={s} n={k + 1} rounds={rounds} open={() => open(s.id)} />)}</div>
+          </section>
+        ))}
+        {blocks.length ? null : <div className="empty">Nothing on the menu matches “{q}”. Try another word or <button type="button" className="link" onClick={() => { setQ(""); setCat("all"); setType("all"); }}>clear the filters</button>.</div>}
+      </div>
+    </>
+  );
+}
+
+export default function Shop() {
+  const { menu } = useStore();
+  const { services, rounds } = menu;
+  const open = useOpen();
+  const list = useRef(null);
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const toMenu = () => list.current.scrollIntoView({ behavior: calm ? "auto" : "smooth" });
 
   return (
     <>
@@ -68,15 +127,7 @@ export default function Shop() {
               <Pill onClick={() => open("bqa")}>Free brand assessment</Pill>
             </div>
           </div>
-          <div className="ticket specials">
-            <h2>Today’s specials</h2>
-            <div className="rule" />
-            {menu.specials.map(menu.svc).filter(Boolean).map((s) => (
-              <button key={s.id} type="button" className="tl" onClick={() => open(s.id)}><span className="n">{s.name.replace("Monthly Plan · ", "Social · ")}</span><span className="d" /><span className="num">{fmt(s.price)}{s.unit === "month" ? "/mo" : ""}</span></button>
-            ))}
-            <div className="rule" />
-            <div className="foot">Every project includes up to {rounds} correction rounds.<br />Start with 50% advance. GST invoice issued.</div>
-          </div>
+          <Specials />
         </div>
         <div className="wrap"><div className="stats">
           <div><b>20+</b><span>years of branding, design and film</span></div>
@@ -85,7 +136,7 @@ export default function Shop() {
           <div><b>3 days</b><span>express delivery, hybrid human-AI studio</span></div>
         </div></div>
       </section>
-      <div className="marquee" aria-hidden="true"><div className="track-m">{[0, 1].map((k) => names.map((s) => <span key={k + s.id}>{s.name}</span>))}</div></div>
+      <Marquee />
       </div>
       <div className="paper">
         <div className="wrap">
@@ -96,26 +147,7 @@ export default function Shop() {
             <div><b><i>04</i>Approve</b><p>Review drafts, request up to {rounds} rounds, download finals.</p></div>
           </div>
         </div>
-        <div className="filters" id="menu">
-          <div className="wrap">
-            <div className="row1">
-              <input className="search" type="search" placeholder="Search the menu: logo, reel, 30 seconds, brochure…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search services" />
-              <Pick label="Category" value={cat} options={choices} onPick={pickCat} />
-              <div className="seg" role="group" aria-label="Billing type">
-                {[["all", "All"], ["once", "One-time"], ["month", "Monthly"]].map(([id, l]) => <button key={id} type="button" className={type === id ? "on" : ""} aria-pressed={type === id} onClick={() => setType(id)}>{l}</button>)}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="wrap" id="results">
-          {blocks.map(([c, i, list]) => (
-            <section key={c.id} className="catblock" aria-labelledby={"cat-" + c.id}>
-              <div className="cathead"><span className="big" aria-hidden="true">{two(i + 1)}</span><h2 id={"cat-" + c.id}>{c.name}</h2><p>{c.blurb}</p></div>
-              <div className="items">{list.map((s, k) => <Item key={s.id} s={s} n={k + 1} rounds={rounds} open={() => open(s.id)} />)}</div>
-            </section>
-          ))}
-          {blocks.length ? null : <div className="empty">Nothing on the menu matches “{q}”. Try another word or <button type="button" className="link" onClick={() => { setQ(""); setCat("all"); setType("all"); }}>clear the filters</button>.</div>}
-        </div>
+        <ServiceMenu ref={list} />
       </div>
       <section className="closer"><div className="wrap">
         <div><h2>Not sure what your brand needs first?</h2><p>Start with the free Brand Quick Assessment. Three priorities, one 20-minute call.</p></div>
