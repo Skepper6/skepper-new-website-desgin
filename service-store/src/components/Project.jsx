@@ -33,9 +33,9 @@ function Brief({ p, act, busy, err }) {
   };
   const today = new Date().toLocaleDateString("en-CA");
   return (
-    <div className="box"><h3>{p.quote ? "Tell us about your event" : "Share your brief"}</h3>
+    <div className="box"><h3>{p.quote ? "Tell us about your project" : "Share your brief"}</h3>
       <form onSubmit={submit} noValidate>
-        <Field id="goal" label={`What should this ${p.quote ? "event" : "work"} achieve?`}><textarea id="goal" name="goal" required placeholder="e.g. Launch our new range and get 200 enquiries in the first month" /></Field>
+        <Field id="goal" label={`What should this ${p.quote ? "project" : "work"} achieve?`}><textarea id="goal" name="goal" required placeholder="e.g. Launch our new range and get 200 enquiries in the first month" /></Field>
         <div className="cols2">
           <Field id="audience" label="Who is it for?" placeholder="Audience, age, city, role" />
           <Field id="date" label="Deadline you are working to" type="date" min={today} />

@@ -37,6 +37,7 @@ if ($what === 'setup') {
     } else {
         runFile(__DIR__ . '/../db/seed.sql');
     }
+    runFile(__DIR__ . '/../db/add-webapps.sql');
     echo 'Ready. Services: ' . Db::one('SELECT COUNT(*) n FROM services')['n'] . "\n";
 } elseif ($what === 'staff') {
     $email = strtolower($argv[2] ?? '');

@@ -7,6 +7,8 @@ return [
     'demo' => false,
     // Address of the store, used in emails.
     'url' => 'https://shop.theskepper.com',
+    // Websites allowed to show the store (the Webflow site). No trailing slash.
+    'origins' => ['https://theskepper.com', 'https://www.theskepper.com'],
     'db' => ['host' => 'localhost', 'port' => 3306, 'name' => 'skepper_store', 'user' => '', 'pass' => ''],
     // Uploaded files. Keep this folder outside public_html.
     'storage' => dirname(__DIR__, 2) . '/skepper-storage',

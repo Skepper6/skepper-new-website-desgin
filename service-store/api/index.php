@@ -13,6 +13,21 @@ try {
     $path = preg_replace('#^.*?/api#', '', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
     $path = '/' . trim($path, '/');
 
+    // The store page sits on theskepper.com (Webflow) while this server has its own address.
+    // Only the sites listed in config 'origins' may call it with the visitor's cookie.
+    $from = $_SERVER['HTTP_ORIGIN'] ?? '';
+    if ($from !== '' && in_array($from, (array) Config::get('origins', []), true)) {
+        header("Access-Control-Allow-Origin: $from");
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Allow-Headers: Content-Type, X-Store');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Vary: Origin');
+    }
+    if ($method === 'OPTIONS') {
+        http_response_code(204);
+        exit;
+    }
+
     // Razorpay’s own call carries its own signature and no cookie.
     if ($method === 'POST' && $path === '/payments/webhook') {
         Pay::webhook();

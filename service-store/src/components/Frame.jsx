@@ -90,7 +90,7 @@ function CartButton() {
 
 /** The store's own bar, under the website's header. */
 export const StoreBar = () => (
-  <div className="storebar"><a className="logo-name" href="#shop">Service Store</a><Tabs /><span className="spacer" /><CartButton /></div>
+  <div className="storebar"><Tabs /><span className="spacer" /><CartButton /></div>
 );
 
 export function Header() {
@@ -101,7 +101,6 @@ export function Header() {
       <header>
         <div className="bar">
           <a className="logo" href={SITE} aria-label="Skepper, main site"><img src="./logo.svg" alt="Skepper" width="151" height="42" /></a>
-          <a className="logo-name" href="#shop">Service Store</a>
           <Tabs />
           <span className="spacer" />
           <div className="links">
