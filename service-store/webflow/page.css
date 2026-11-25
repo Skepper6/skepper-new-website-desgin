@@ -12,9 +12,13 @@
 .sks-h1-swoosh { position: relative; display: inline-block; font-weight: 700; }
 .sks-sub { max-width: 34em; margin-top: 0px; margin-bottom: 0px; color: #ffffff; font-size: clamp(1rem, 0.907rem + 0.381vw, 1.25rem); font-weight: 500; line-height: 1.5; }
 .sks-ctas { display: flex; flex-wrap: wrap; grid-column-gap: 14px; grid-row-gap: 14px; margin-top: 34px; }
-.sks-btn { display: inline-flex; height: 57px; padding-top: 8px; padding-right: 7px; padding-bottom: 8px; padding-left: 20px; align-items: center; grid-column-gap: 20px; border: 1px solid #303030; border-radius: 60px; background-color: #161616; color: #ffffff; text-decoration: none; white-space: nowrap; }
-.sks-btn-text { color: #ffffff; line-height: 28px; }
-.sks-btn-disc { width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background-color: #ffffff; }
+.sks-btn { display: inline-flex; height: 57px; padding-top: 8px; padding-right: 7px; padding-bottom: 8px; padding-left: 20px; align-items: center; grid-column-gap: 20px; border: 1px solid #303030; border-radius: 60px; background-color: #161616; color: #ffffff; text-decoration: none; white-space: nowrap; transition: border-color 300ms ease; }
+.sks-btn:hover { border-color: #ffffff; }
+.sks-btn-text { height: 28px; overflow: hidden; color: #ffffff; line-height: 28px; }
+.sks-btn-roll { color: #ffffff; line-height: 28px; }
+.sks-btn-disc { display: flex; width: 40px; height: 40px; flex-shrink: 0; justify-content: center; align-items: center; border-radius: 50%; background-color: #ffffff; color: #000000; font-size: 18px; line-height: 1; }
+.sks-btn-arrow { color: #000000; font-size: 18px; line-height: 1; }
+.sks-swish { position: absolute; left: -3.35%; top: auto; right: auto; bottom: -0.55em; width: 110.7%; max-width: none; pointer-events: none; }
 .sks-specials { min-height: 330px; }
 .sks-stats { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; grid-column-gap: 0px; grid-row-gap: 0px; border: 1px solid rgba(255, 255, 255, 0.28); }
 .sks-stat-1 { padding: 24px 28px; }
@@ -23,7 +27,7 @@
 .sks-stat-4 { padding: 24px 28px; border-left: 1px solid rgba(255, 255, 255, 0.28); }
 .sks-stat-num { margin-bottom: 4px; font-size: clamp(1.5625rem, 0.982rem + 2.381vw, 3.125rem); font-weight: 500; line-height: 1.15; letter-spacing: -0.03em; }
 .sks-stat-text { line-height: 1.45; }
-.sks-marquee { min-height: 120px; }
+.sks-marquee { min-height: 120px; overflow: hidden; }
 .sks-paper { position: relative; margin-top: -100px; padding-top: 90px; border-top-left-radius: 100px; border-top-right-radius: 100px; background-color: #ffffff; color: #0f0f0f; }
 .sks-how { display: grid; padding-bottom: 60px; grid-template-columns: 1fr 1fr 1fr 1fr; grid-column-gap: 0px; grid-row-gap: 0px; }
 .sks-step-1 { padding-right: 28px; }

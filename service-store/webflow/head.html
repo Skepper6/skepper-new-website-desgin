@@ -3,11 +3,13 @@
 <style>
 html { scroll-padding-top: 150px; }
 .sks-h1, .sks-h2 { text-wrap: balance; }
-.sks-h1-swoosh::after { content: ""; position: absolute; left: 4%; bottom: -0.05em; width: 96%; aspect-ratio: 268 / 30; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 268 30' fill='%23f5b335'%3E%3Cpath d='M2 28C70-4 190-8 266 28 190 4 80 4 2 28Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 .sks-stat-num { width: fit-content; background: linear-gradient(90deg, #fff 55%, #b9c9de); background-clip: text; -webkit-background-clip: text; color: transparent; }
+.sks-btn-roll { text-shadow: 0 28px 0 #fff; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.sks-btn:hover .sks-btn-roll { transform: translateY(-28px); }
 .sks-btn-disc { background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.7'%3E%3Cpath d='M2 14 13.4 2.6M4.6 2.2h9.2v9.2'/%3E%3C/svg%3E") center no-repeat; transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+.sks-btn-arrow { display: none; }
 .sks-btn:hover .sks-btn-disc { transform: rotate(45deg); }
-.sks-btn:hover { color: #fff; border-color: #4e4e4e; }
+.sks-btn:hover { color: #fff; }
 .sks-btn:focus-visible { outline: 3px solid #0073ff; outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { .sks-btn-disc { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .sks-btn-disc, .sks-btn-roll { transition: none; } }
 </style>

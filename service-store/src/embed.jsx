@@ -9,7 +9,7 @@ import { Checkout, Thanks } from "./components/Checkout";
 import { StoreBar } from "./components/Frame";
 import Service from "./components/Service";
 import { Marquee, ServiceMenu, Specials } from "./components/Shop";
-import { StoreProvider, useStore } from "./lib/store";
+import { StoreProvider, useStore, VIEWS } from "./lib/store";
 import css from "./styles.css?inline";
 
 const VIEW = { checkout: Checkout, thanks: Thanks, portal: Portal, studio: Studio };
@@ -36,6 +36,15 @@ function sheet() {
   return s;
 }
 
+/** "#portal" and the like are our own screens, not places on the page around us. */
+function links(e) {
+  const a = e.target.closest?.('a[href^="#"]');
+  const v = a?.getAttribute("href").slice(1);
+  if (!a || !VIEWS.includes(v)) return;
+  e.preventDefault();
+  dispatchEvent(new CustomEvent("skepper-go", { detail: v }));
+}
+
 function open(styles) {
   const slots = {};
   for (const n of ["bar", "specials", "marquee", "menu", "view"]) {
@@ -43,6 +52,7 @@ function open(styles) {
     if (!el) continue;
     const root = el.shadowRoot || el.attachShadow({ mode: "open" });
     root.adoptedStyleSheets = [styles];
+    root.addEventListener("click", links);
     slots[n] = document.createElement("div");
     root.replaceChildren(slots[n]);
   }
@@ -72,7 +82,8 @@ function Embed({ slots }) {
     const el = host("shop");
     if (el) el.style.display = shop ? "" : "none";
     measure();
-  }, [shop]);
+    dispatchEvent(new Event("resize")); // Webflow's own animations measure the page again
+  }, [shop, menu]);
   useEffect(() => {
     // Buttons that live in Webflow: data-store="menu" or data-store="open:bqa"
     const click = (e) => {
@@ -105,16 +116,39 @@ function Embed({ slots }) {
   );
 }
 
+const SLOTS = ["bar", "specials", "marquee", "menu", "view"];
+let live = null;
+
+/** Puts the store on the page, and again whenever the page around it is redrawn (Webflow's preview draws late, and redraws). */
+function sync() {
+  if (live && !SLOTS.every((n) => !live.hosts[n] || (live.hosts[n].isConnected && host(n) === live.hosts[n]))) {
+    live.root.unmount();
+    live.watch.disconnect();
+    live = null;
+  }
+  if (live || !host("view") || !host("menu")) return;
+  const slots = open(sheet());
+  const root = createRoot(slots.view);
+  root.render(<StoreProvider><Embed slots={slots} /></StoreProvider>);
+  const watch = new ResizeObserver(measure);
+  for (const el of [document.documentElement, host("bar"), document.querySelector(".rt-navbar-v1")]) if (el) watch.observe(el);
+  live = { root, watch, hosts: Object.fromEntries(SLOTS.map((n) => [n, host(n)])) };
+  measure();
+}
 function start() {
-  if (!host("view") || host("view").shadowRoot) return;
+  if (window.__skepperStore) return;
+  window.__skepperStore = true;
   const lock = document.createElement("style");
   lock.textContent = "html.locked{overflow:hidden;scrollbar-gutter:stable}";
   document.head.append(lock);
-  const slots = open(sheet());
-  createRoot(slots.view).render(<StoreProvider><Embed slots={slots} /></StoreProvider>);
-  const watch = new ResizeObserver(measure);
-  for (const el of [document.documentElement, host("bar"), document.querySelector(".rt-navbar-v1")]) if (el) watch.observe(el);
-  measure();
+  let due = false;
+  const look = () => {
+    if (due) return;
+    due = true;
+    setTimeout(() => { due = false; sync(); }, 60);
+  };
+  new MutationObserver(look).observe(document.documentElement, { childList: true, subtree: true });
+  sync();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
 else start();

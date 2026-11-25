@@ -5,7 +5,9 @@ const Ctx = createContext(null);
 export const useStore = () => useContext(Ctx);
 
 const KEY = "skepper-cart-v2";
-const VIEWS = ["shop", "portal", "studio", "checkout", "thanks"];
+export const VIEWS = ["shop", "portal", "studio", "checkout", "thanks"];
+// Webflow's preview uses the address for itself, so there the screens change without it.
+const QUIET = __EMBED__ && /(^|\.)canvas\.webflow\.com$/.test(location.hostname);
 const readView = () => {
   const h = location.hash.replace("#", "");
   return VIEWS.includes(h) ? h : "shop";
@@ -70,6 +72,21 @@ export function StoreProvider({ children }) {
     addEventListener("hashchange", on);
     return () => removeEventListener("hashchange", on);
   }, []);
+  const go = useCallback((v) => {
+    if (!QUIET) {
+      location.hash = v;
+      return;
+    }
+    setView(v);
+    setLayer(null);
+    scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
+    if (!__EMBED__) return undefined;
+    const on = (e) => go(e.detail);
+    addEventListener("skepper-go", on);
+    return () => removeEventListener("skepper-go", on);
+  }, [go]);
 
   const setCart = useCallback((c) => {
     setCartRaw(c);
@@ -89,8 +106,8 @@ export function StoreProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({ menu, fail, load, session, setSession, cart, setCart, view, go: (v) => (location.hash = v), layer, setLayer, order, setOrder, current, setCurrent }),
-    [menu, fail, load, session, cart, setCart, view, layer, order, setOrder, current],
+    () => ({ menu, fail, load, session, setSession, cart, setCart, view, go, layer, setLayer, order, setOrder, current, setCurrent }),
+    [menu, fail, load, session, cart, setCart, view, go, layer, order, setOrder, current],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
